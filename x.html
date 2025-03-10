@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Cuttuuuuu</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ffe6f2 0%, #f9f2ff 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        header {
+            text-align: center;
+            padding: 2rem 0;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #d94f8b;
+            margin: 0;
+            font-size: 2.5rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            color: #8e44ad;
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+        
+        .heart-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d94f8b' opacity='0.3'><path d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/></svg>") no-repeat center center;
+            opacity: 0;
+            animation: float 10s linear infinite;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-1000%) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 1200px;
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        .song-card {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 220px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .song-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .song-card.active {
+            background-color: rgba(217, 79, 139, 0.1);
+            box-shadow: 0 0 20px rgba(217, 79, 139, 0.3);
+        }
+        
+        .song-card.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #d94f8b, #8e44ad);
+        }
+        
+        .song-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+        
+        .artist {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .love-message {
+            font-style: italic;
+            color: #d94f8b;
+            font-size: 0.85rem;
+            margin-top: 15px;
+            height: 40px;
+        }
+        
+        .player-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transform: translateY(100%);
+            transition: transform 0.5s ease;
+        }
+        
+        .player-container.active {
+            transform: translateY(0);
+        }
+        
+        .now-playing {
+            display: flex;
+            width: 100%;
+            max-width: 800px;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            margin-bottom: 10px;
+        }
+        
+        .track-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .playing-title {
+            font-weight: bold;
+            color: #d94f8b;
+        }
+        
+        .playing-artist {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .control-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: #d94f8b;
+        }
+        
+        .control-btn:hover {
+            background-color: rgba(217, 79, 139, 0.1);
+        }
+        
+        .play-pause {
+            background-color: #d94f8b;
+            color: white;
+            width: 50px;
+            height: 50px;
+        }
+        
+        .play-pause:hover {
+            background-color: #c93d79;
+        }
+        
+        .progress-container {
+            width: 100%;
+            max-width: 800px;
+            padding: 0 20px;
+            margin-bottom: 10px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 5px;
+            background-color: #e6e6e6;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #d94f8b, #8e44ad);
+            border-radius: 5px;
+            width: 0%;
+        }
+        
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .song-card {
+                width: calc(50% - 20px);
+                min-width: 150px;
+            }
+        }
+        
+        /* Special message popup */
+        .special-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 90%;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .special-message.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        
+        .message-title {
+            color: #d94f8b;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .message-content {
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        
+        .message-close {
+            display: block;
+            margin: 0 auto;
+            background: #d94f8b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .message-close:hover {
+            background: #c93d79;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .special-btn {
+            position: fixed;
+            bottom: 120px;
+            right: 30px;
+            background: #d94f8b;
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .special-btn:hover {
+            transform: rotate(15deg);
+            background: #c93d79;
+        }
+    </style>
+</head>
+<body>
+    <div class="heart-container" id="heartContainer"></div>
+    
+    <header>
+        <h1>For You My Sweetheart</h1>
+        <p class="subtitle">A collection of songs by your Aashiq</p>
+    </header>
+    
+    <div class="container" id="songContainer">
+        <!-- Song cards will be generated by JavaScript -->
+    </div>
+    
+    <div class="player-container" id="playerContainer">
+        <div class="now-playing">
+            <div class="track-info">
+                <span class="playing-title" id="playingTitle">No song selected</span>
+                <span class="playing-artist" id="playingArtist"></span>
+            </div>
+            <div class="controls">
+                <button class="control-btn" id="prevBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5"></line></svg>
+                </button>
+                <button class="control-btn play-pause" id="playPauseBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="playPauseIcon"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                </button>
+                <button class="control-btn" id="nextBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg>
+                </button>
+            </div>
+        </div>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <div class="time-display">
+                <span id="currentTime">0:00</span>
+                <span id="duration">0:00</span>
+            </div>
+        </div>
+        <audio id="audioPlayer"></audio>
+    </div>
+    
+    <button class="special-btn" id="specialBtn">❤️</button>
+    
+    <div class="overlay" id="overlay"></div>
+    
+    <div class="special-message" id="specialMessage">
+        <h2 class="message-title">A Special Message For You</h2>
+        <div class="message-content">
+            <p>To the special person in my life,</p>
+            <p> I know I am not a good singer but every song reminds me of a moment we've shared together. </p>
+            <p>This playlist is just a small token of how much you mean to me. Each song carries a memory, a feeling, or more beautiful moments to come.</p>
+            <p>I love you more than words could ever express. Thank you for being the support in my life.</p>
+            <p>I am Forever yours and only yours.</p>
+        </div>
+        <button class="message-close" id="closeMessage">Close ❤️</button>
+    </div>
+    
+    <script>
+        // Updated song data with just 6 songs - replace with your actual MP3 filenames
+        const songs = [
+            {
+                title: "Perfect",
+                artist: "Yasu",
+                message: "How Perfect Cuttieess we look together",
+                file: "perfect.mp3" // Update with your actual filename
+            },
+            {
+                title: "I Think They Call this Love",
+                artist: "0 Brain",
+                message: "How I feel every time I see you",
+                file: "i think they call this love.mp3" // Update with your actual filename
+            },
+            {
+                title: "Make You Mine",
+                artist: "Pratik",
+                message: "My Intentions with you",
+                file: "make you mine.mp3" // Update with your actual filename
+            },
+            {
+                title: "Nazar Na lag Jaaye",
+                artist: "Yasu",
+                message: "This toh I think Everytime You go out",
+                file: "nazar na lag jaaye.mp3" // Update with your actual filename
+            },
+            {
+                title: "Mil Gayi Tu Hi",
+                artist: "0 Brain",
+                message: "The Song I wish to sing forever for you, which I cried the most singing.",
+                file: "mil gaya wahi.mp3" // Update with your actual filename
+            },
+            {
+                title: "Haareya",
+                artist: "Pratik",
+                message: "Tujhpe dil haareya",
+                file: "haareya.mp3" // Update with your actual filename
+            }
+        ];
+        
+        // DOM Elements
+        const songContainer = document.getElementById('songContainer');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const playerContainer = document.getElementById('playerContainer');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const playPauseIcon = document.getElementById('playPauseIcon');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progress = document.getElementById('progress');
+        const currentTimeEl = document.getElementById('currentTime');
+        const durationEl = document.getElementById('duration');
+        const playingTitle = document.getElementById('playingTitle');
+        const playingArtist = document.getElementById('playingArtist');
+        const heartContainer = document.getElementById('heartContainer');
+        const specialBtn = document.getElementById('specialBtn');
+        const specialMessage = document.getElementById('specialMessage');
+        const overlay = document.getElementById('overlay');
+        const closeMessage = document.getElementById('closeMessage');
+        
+        let currentSongIndex = 0;
+        let isPlaying = false;
+        
+        // Create hearts for background animation
+        function createHearts() {
+            for (let i = 0; i < 15; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.style.left = `${Math.random() * 100}%`;
+                heart.style.animationDelay = `${Math.random() * 10}s`;
+                heart.style.opacity = Math.random() * 0.5 + 0.1;
+                heart.style.transform = `scale(${Math.random() * 0.6 + 0.5})`;
+                heartContainer.appendChild(heart);
+            }
+        }
+        
+        // Create song cards
+        function createSongCards() {
+            songs.forEach((song, index) => {
+                const card = document.createElement('div');
+                card.classList.add('song-card');
+                card.innerHTML = `
+                    <div class="song-title">${song.title}</div>
+                    <div class="artist">${song.artist}</div>
+                    <div class="love-message">${song.message}</div>
+                `;
+                
+                card.addEventListener('click', () => {
+                    playSong(index);
+                });
+                
+                songContainer.appendChild(card);
+            });
+        }
+        
+        // Play a song
+        function playSong(index) {
+            currentSongIndex = index;
+            
+            // Remove active class from all cards
+            document.querySelectorAll('.song-card').forEach((card, i) => {
+                if (i === index) {
+                    card.classList.add('active');
+                } else {
+                    card.classList.remove('active');
+                }
+            });
+            
+            // Show player
+            playerContainer.classList.add('active');
+            
+            // Update player info
+            playingTitle.textContent = songs[index].title;
+            playingArtist.textContent = songs[index].artist;
+            
+            // Set audio source and play
+            audioPlayer.src = songs[index].file;
+            audioPlayer.load();
+            audioPlayer.play();
+            
+            isPlaying = true;
+            updatePlayPauseIcon();
+        }
+        
+        // Format time from seconds to MM:SS
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+        
+        // Play/Pause toggle
+        function togglePlayPause() {
+            if (isPlaying) {
+                audioPlayer.pause();
+            } else {
+                audioPlayer.play();
+            }
+            isPlaying = !isPlaying;
+            updatePlayPauseIcon();
+        }
+        
+        // Update play/pause icon
+        function updatePlayPauseIcon() {
+            if (isPlaying) {
+                playPauseIcon.innerHTML = '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
+            } else {
+                playPauseIcon.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"></polygon>';
+            }
+        }
+        
+        // Play next song
+        function nextSong() {
+            const newIndex = (currentSongIndex + 1) % songs.length;
+            playSong(newIndex);
+        }
+        
+        // Play previous song
+        function prevSong() {
+            const newIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+            playSong(newIndex);
+        }
+        
+        // Event listeners
+        playPauseBtn.addEventListener('click', togglePlayPause);
+        nextBtn.addEventListener('click', nextSong);
+        prevBtn.addEventListener('click', prevSong);
+        
+        // Audio event listeners
+        audioPlayer.addEventListener('loadedmetadata', () => {
+            durationEl.textContent = formatTime(audioPlayer.duration);
+        });
+        
+        audioPlayer.addEventListener('timeupdate', () => {
+            const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+            progress.style.width = `${percent}%`;
+            currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
+        });
+        
+        audioPlayer.addEventListener('ended', () => {
+            nextSong();
+        });
+        
+        // Click on progress bar to seek
+        progressBar.addEventListener('click', (e) => {
+            const clickPos = (e.offsetX / progressBar.offsetWidth);
+            audioPlayer.currentTime = clickPos * audioPlayer.duration;
+        });
+        
+        // Special message button
+        specialBtn.addEventListener('click', () => {
+            specialMessage.classList.add('show');
+            overlay.classList.add('show');
+        });
+        
+        closeMessage.addEventListener('click', () => {
+            specialMessage.classList.remove('show');
+            overlay.classList.remove('show');
+        });
+        
+        // Initialize
+        createHearts();
+        createSongCards();
+        
+        // Auto-play first song after a delay
+        setTimeout(() => {
+            playSong(0);
+        }, 1000);
+    </script>
+</body>
+</html>
